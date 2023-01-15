@@ -44,6 +44,8 @@ function App() {
 
   //функция getFilteredTasksForRender возвращает массив тасок
   //основываясь на определенном фильтре
+
+  //
   const getFilteredTasksForRender = (
     tasks: Array<TaskType>,
     filter: FilterValuesType
