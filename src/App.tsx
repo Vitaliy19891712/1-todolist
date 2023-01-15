@@ -37,6 +37,7 @@ function App() {
 
   // Функция changeFilter для кнопки, при нажатии
   // переменной filter передается соотвествующее значение
+  // для использования в функции getFilteredTasksForRender
   const changeFilter = (filter: FilterValuesType) => {
     setFilter(filter);
   };
