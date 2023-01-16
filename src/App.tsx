@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { v1 } from "uuid";
 import TodoList, { TaskType } from "./TodoList";
 
 // Типизируем варианты фильтров
-type FilterValuesType = "all" | "active" | "completed";
+export type FilterValuesType = "all" | "active" | "completed";
 
 // Создание компоненты Арр
 function App() {
@@ -14,17 +15,27 @@ function App() {
   // Создаем useState для списка тасок (задач)
   // используем для возможности изменения состояния тасок в зависимости от фильтров
   const [tasks, setTasks] = useState<Array<TaskType>>([
-    { id: 1, title: "HTML", isDone: true },
-    { id: 2, title: "CSS", isDone: true },
-    { id: 3, title: "JS/TS", isDone: false },
+    { id: v1(), title: "HTML", isDone: true },
+    { id: v1(), title: "CSS", isDone: true },
+    { id: v1(), title: "JS/TS", isDone: false },
   ]);
-
+  console.log(tasks[0].id);
+  console.log(tasks[1].id);
+  console.log(tasks[2].id);
   // Функция для удаления тасок по ID
   // и назначаем конкретное действие (удаление)
-  const removeTask = (taskId: number) => {
+  const removeTask = (taskId: string) => {
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
+  const addTask = (title: string) => {
+    const newTask: TaskType = {
+      id: v1(),
+      title,
+      isDone: false,
+    };
+    setTasks([...tasks, newTask]);
+  };
   // const tasks_2: Array<TaskType> = [
   //   { id: 1, title: "Apple", isDone: true },
   //   { id: 2, title: "Meat", isDone: true },
@@ -45,7 +56,6 @@ function App() {
   //функция getFilteredTasksForRender возвращает массив тасок
   //основываясь на определенном фильтре
 
-  //
   const getFilteredTasksForRender = (
     tasks: Array<TaskType>,
     filter: FilterValuesType
@@ -73,6 +83,7 @@ function App() {
         tasks={filteredTasksForRender}
         removeTask={removeTask}
         changeFilter={changeFilter}
+        addTask={addTask}
       />
       {/* <TodoList title={todoListTitle_2} tasks={tasks_2} /> */}
     </div>
