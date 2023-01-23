@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { v1 } from "uuid";
 import TodoList, { TaskType } from "./TodoList";
+import "./App.css";
 
 // Типизируем варианты фильтров
 export type FilterValuesType = "all" | "active" | "completed";
@@ -19,9 +20,7 @@ function App() {
     { id: v1(), title: "CSS", isDone: true },
     { id: v1(), title: "JS/TS", isDone: false },
   ]);
-  console.log(tasks[0].id);
-  console.log(tasks[1].id);
-  console.log(tasks[2].id);
+
   // Функция для удаления тасок по ID
   // и назначаем конкретное действие (удаление)
   const removeTask = (taskId: string) => {
@@ -53,6 +52,13 @@ function App() {
     setFilter(filter);
   };
 
+  const changeTaskStatus = (tasksId: string, isDone: boolean) => {
+    setTasks(
+      tasks.map((t: TaskType) =>
+        t.id === tasksId ? { ...t, isDone: isDone } : t
+      )
+    );
+  };
   //функция getFilteredTasksForRender возвращает массив тасок
   //основываясь на определенном фильтре
 
@@ -79,11 +85,13 @@ function App() {
   return (
     <div className="App">
       <TodoList
+        filter={filter}
         title={todoListTitle_1}
         tasks={filteredTasksForRender}
         removeTask={removeTask}
         changeFilter={changeFilter}
         addTask={addTask}
+        changeTaskStatus={changeTaskStatus}
       />
       {/* <TodoList title={todoListTitle_2} tasks={tasks_2} /> */}
     </div>
