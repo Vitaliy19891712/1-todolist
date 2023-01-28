@@ -27,6 +27,7 @@ function App() {
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
+  // Описание функции добавления таски
   const addTask = (title: string) => {
     const newTask: TaskType = {
       id: v1(),
@@ -35,6 +36,7 @@ function App() {
     };
     setTasks([...tasks, newTask]);
   };
+
   // const tasks_2: Array<TaskType> = [
   //   { id: 1, title: "Apple", isDone: true },
   //   { id: 2, title: "Meat", isDone: true },

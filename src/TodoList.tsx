@@ -53,6 +53,8 @@ const TodoList = (props: TodoListPropsType) => {
     <span>Your taskslist is empty</span>
   );
 
+  // Обработчик онКлик для кнопки добавления таски (если строка не пустая, выполнить
+  // функцию addTask(в Арр))
   const addTask = () => {
     const trimmedTitle = title.trim();
     if (trimmedTitle !== "") {
@@ -71,7 +73,7 @@ const TodoList = (props: TodoListPropsType) => {
   const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) =>
     e.key === "Enter" && addTask();
 
-  const HandlerCreator = (filter: FilterValuesType) => () =>
+  const handlerCreator = (filter: FilterValuesType) => () =>
     props.changeFilter(filter);
 
   //То, что рендерится
@@ -97,19 +99,19 @@ const TodoList = (props: TodoListPropsType) => {
        с определнным параметром а в компоненте Арр пропишем, что она будет делать */}
         <button
           className={props.filter === "all" ? "btn-active" : ""}
-          onClick={HandlerCreator("all")}
+          onClick={handlerCreator("all")}
         >
           All
         </button>
         <button
           className={props.filter === "active" ? "btn-active" : ""}
-          onClick={HandlerCreator("active")}
+          onClick={handlerCreator("active")}
         >
           Active
         </button>
         <button
           className={props.filter === "completed" ? "btn-active" : ""}
-          onClick={HandlerCreator("completed")}
+          onClick={handlerCreator("completed")}
         >
           Completed
         </button>
