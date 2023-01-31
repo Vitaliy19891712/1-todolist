@@ -1,102 +1,120 @@
 import React, { useState } from "react";
-import { v1 } from "uuid";
-import TodoList, { TaskType } from "./TodoList";
 import "./App.css";
+import { Todolist } from "./Todolist";
+import { v1 } from "uuid";
 
-// Типизируем варианты фильтров
 export type FilterValuesType = "all" | "active" | "completed";
 
-// Создание компоненты Арр
-function App() {
-  // Создаем переменные для названия ТудуЛиста и
-  // используем в свойстве title
-  const todoListTitle_1: string = "What to learn";
-  // const todoListTitle_2: string = "What to buy";
+type TodolistsType = {
+  id: string;
+  title: string;
+  filter: FilterValuesType;
+};
 
-  // Создаем useState для списка тасок (задач)
-  // используем для возможности изменения состояния тасок в зависимости от фильтров
-  const [tasks, setTasks] = useState<Array<TaskType>>([
-    { id: v1(), title: "HTML", isDone: true },
-    { id: v1(), title: "CSS", isDone: true },
-    { id: v1(), title: "JS/TS", isDone: false },
+function App() {
+  let todolistID1 = v1();
+  let todolistID2 = v1();
+
+  let [todolists, setTodolists] = useState<Array<TodolistsType>>([
+    { id: todolistID1, title: "What to learn", filter: "all" },
+    { id: todolistID2, title: "What to buy", filter: "all" },
   ]);
 
-  // Функция для удаления тасок по ID
-  // и назначаем конкретное действие (удаление)
-  const removeTask = (taskId: string) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
-  };
+  let [tasks, setTasks] = useState({
+    [todolistID1]: [
+      { id: v1(), title: "HTML&CSS", isDone: true },
+      { id: v1(), title: "JS", isDone: true },
+      { id: v1(), title: "ReactJS", isDone: false },
+      { id: v1(), title: "Rest API", isDone: false },
+      { id: v1(), title: "GraphQL", isDone: false },
+    ],
+    [todolistID2]: [
+      { id: v1(), title: "HTML&CSS2", isDone: true },
+      { id: v1(), title: "JS2", isDone: true },
+      { id: v1(), title: "ReactJS2", isDone: false },
+      { id: v1(), title: "Rest API2", isDone: false },
+      { id: v1(), title: "GraphQL2", isDone: false },
+    ],
+  });
 
-  // Описание функции добавления таски
-  const addTask = (title: string) => {
-    const newTask: TaskType = {
-      id: v1(),
-      title,
-      isDone: false,
-    };
-    setTasks([...tasks, newTask]);
-  };
+  function removeTask(todolistID: string, taskID: string) {
+    setTasks({
+      ...tasks,
+      [todolistID]: tasks[todolistID].filter((el) => el.id !== taskID),
+    });
 
-  // const tasks_2: Array<TaskType> = [
-  //   { id: 1, title: "Apple", isDone: true },
-  //   { id: 2, title: "Meat", isDone: true },
-  //   { id: 3, title: "Veg", isDone: false },
-  // ];
+    // .    let filteredTasks = tasks.filter((t) => t.id != id);
+    //     setTasks(filteredTasks);
+  }
 
-  // Создаем useState для фильтров
-  // используем для изменеия состояния фильтров
-  const [filter, setFilter] = useState<FilterValuesType>("all");
+  function addTask(todolistID: string, title: string) {
+    let newTask = { id: v1(), title: title, isDone: false };
+    setTasks({ ...tasks, [todolistID]: [...tasks[todolistID], newTask] });
 
-  // Функция changeFilter для кнопки, при нажатии
-  // переменной filter передается соотвествующее значение
-  // для использования в функции getFilteredTasksForRender
-  const changeFilter = (filter: FilterValuesType) => {
-    setFilter(filter);
-  };
+    // let task = { id: v1(), title: title, isDone: false };
+    // let newTasks = [task, ...tasks];
+    // setTasks(newTasks);
+  }
 
-  const changeTaskStatus = (tasksId: string, isDone: boolean) => {
-    setTasks(
-      tasks.map((t: TaskType) =>
-        t.id === tasksId ? { ...t, isDone: isDone } : t
+  function changeStatus(todolistID: string, taskId: string, isDone: boolean) {
+    setTasks({
+      ...tasks,
+      [todolistID]: tasks[todolistID].map((el) =>
+        el.id === taskId ? { ...el, isDone } : el
+      ),
+    });
+
+    // let task = tasks.find((t) => t.id === taskId);
+    // if (task) {
+    //   task.isDone = isDone;
+  }
+
+  //     setTasks([...tasks]);
+  //   }
+
+  function changeFilter(todolistID: string, value: FilterValuesType) {
+    setTodolists(
+      todolists.map((el) =>
+        el.id === todolistID ? { ...el, filter: value } : el
       )
     );
-  };
-  //функция getFilteredTasksForRender возвращает массив тасок
-  //основываясь на определенном фильтре
+  }
 
-  const getFilteredTasksForRender = (
-    tasks: Array<TaskType>,
-    filter: FilterValuesType
-  ): Array<TaskType> => {
-    if (filter === "active") {
-      return tasks.filter((task) => task.isDone === false);
-    } else if (filter === "completed") {
-      return tasks.filter((task) => task.isDone === true);
-    } else {
-      return tasks;
-    }
+  const removeTodolist = (todolistID: string) => {
+    setTodolists(todolists.filter((el) => el.id !== todolistID));
+    delete tasks[todolistID];
   };
 
-  //переменной filteredTasksForRender присваивается тот массив тасок
-  //который получается из функции getFilteredTasksForRender
-  //основываясь на определенном фильтре и filteredTasksForRender
-  //передает массив в свойсво ТудуЛиста
-  const filteredTasksForRender = getFilteredTasksForRender(tasks, filter);
-
-  //То, что рендерится(разметка из файла ТудуЛист, а данные в этом файле)
   return (
     <div className="App">
-      <TodoList
-        filter={filter}
-        title={todoListTitle_1}
-        tasks={filteredTasksForRender}
-        removeTask={removeTask}
-        changeFilter={changeFilter}
-        addTask={addTask}
-        changeTaskStatus={changeTaskStatus}
-      />
-      {/* <TodoList title={todoListTitle_2} tasks={tasks_2} /> */}
+      {todolists.map((el) => {
+        let tasksForTodolist = tasks[el.id];
+        console.log(tasks[el.id]);
+
+        if (el.filter === "active") {
+          tasksForTodolist = tasks[el.id].filter((t) => !t.isDone);
+        }
+        if (el.filter === "completed") {
+          tasksForTodolist = tasks[el.id].filter((t) => t.isDone);
+        }
+
+        return (
+          <Todolist
+            key={el.id}
+            todolistID={el.id}
+            title={el.title}
+            tasks={tasksForTodolist}
+            removeTask={removeTask}
+            changeFilter={changeFilter}
+            addTask={addTask}
+            changeTaskStatus={changeStatus}
+            filter={el.filter}
+            removeTodolist={removeTodolist}
+          />
+        );
+      })}
     </div>
   );
 }
+
 export default App;
