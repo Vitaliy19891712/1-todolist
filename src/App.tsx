@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import { Todolist } from "./Todolist";
 import { v1 } from "uuid";
+import SuperInput from "./Components/SuperInput";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -37,23 +38,34 @@ function App() {
     ],
   });
 
+  const editTask = (todolistID: string, taskID: string, newTitle: string) => {
+    const editVal = {
+      ...tasks,
+      [todolistID]: tasks[todolistID].map((el) =>
+        el.id === taskID ? { ...el, title: newTitle } : el
+      ),
+    };
+    setTasks(editVal);
+  };
+
+  const editTodo = (todolistID: string, newTitle: string) => {
+    setTodolists(
+      todolists.map((el) =>
+        el.id === todolistID ? { ...el, title: newTitle } : el
+      )
+    );
+  };
+
   function removeTask(todolistID: string, taskID: string) {
     setTasks({
       ...tasks,
       [todolistID]: tasks[todolistID].filter((el) => el.id !== taskID),
     });
-
-    // .    let filteredTasks = tasks.filter((t) => t.id != id);
-    //     setTasks(filteredTasks);
   }
 
   function addTask(todolistID: string, title: string) {
     let newTask = { id: v1(), title: title, isDone: false };
     setTasks({ ...tasks, [todolistID]: [...tasks[todolistID], newTask] });
-
-    // let task = { id: v1(), title: title, isDone: false };
-    // let newTasks = [task, ...tasks];
-    // setTasks(newTasks);
   }
 
   function changeStatus(todolistID: string, taskId: string, isDone: boolean) {
@@ -63,14 +75,7 @@ function App() {
         el.id === taskId ? { ...el, isDone } : el
       ),
     });
-
-    // let task = tasks.find((t) => t.id === taskId);
-    // if (task) {
-    //   task.isDone = isDone;
   }
-
-  //     setTasks([...tasks]);
-  //   }
 
   function changeFilter(todolistID: string, value: FilterValuesType) {
     setTodolists(
@@ -85,8 +90,20 @@ function App() {
     delete tasks[todolistID];
   };
 
+  const addTodoList = (newTitle: string) => {
+    const newTodoID = v1();
+    const newTodoList: TodolistsType = {
+      id: newTodoID,
+      title: newTitle,
+      filter: "all",
+    };
+    setTodolists([...todolists, newTodoList]);
+    setTasks({ ...tasks, [newTodoID]: [] });
+  };
+
   return (
     <div className="App">
+      <SuperInput callback={addTodoList} />
       {todolists.map((el) => {
         let tasksForTodolist = tasks[el.id];
         console.log(tasks[el.id]);
@@ -110,6 +127,8 @@ function App() {
             changeTaskStatus={changeStatus}
             filter={el.filter}
             removeTodolist={removeTodolist}
+            editTask={editTask}
+            editTodo={editTodo}
           />
         );
       })}
