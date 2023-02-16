@@ -1,4 +1,6 @@
+import Button from "@mui/material/Button";
 import React, { ChangeEvent, useState } from "react";
+import TextField from "@mui/material/TextField";
 
 type PropsType = {
   callback: (title: string) => void;
@@ -29,16 +31,40 @@ export const SuperInput = (props: PropsType) => {
     }
   };
 
+  const buttonStyle = {
+    maxWidth: "38px",
+    maxHeight: "38px",
+    minWidth: "38px",
+    minHeight: "38px",
+  };
+
   return (
     <div>
-      <input
+      <TextField
+        value={title}
+        id="standard-basic"
+        label={error ? "Title is required" : ""}
+        variant="standard"
+        onChange={onChangeHandler}
+        onKeyDown={onKeyPressHandler}
+        size="small"
+        error={!!error}
+      />
+      {/* <input
         value={title}
         onChange={onChangeHandler}
         onKeyDown={onKeyPressHandler}
         className={error ? "error" : ""}
-      />
-      <button onClick={addTask}>+</button>
-      {error && <div className="error-message">{error}</div>}
+      /> */}
+      <Button
+        variant="contained"
+        onClick={addTask}
+        size="small"
+        style={buttonStyle}
+      >
+        +
+      </Button>
+      {/* {error && <div className="error-message">{error}</div>} */}
     </div>
   );
 };
