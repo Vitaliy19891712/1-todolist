@@ -11,7 +11,7 @@ import Paper from "@mui/material/Paper";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
-type TodolistsType = {
+export type TodolistsType = {
   id: string;
   title: string;
   filter: FilterValuesType;
@@ -46,19 +46,13 @@ function App() {
   const editTask = (todolistID: string, taskID: string, newTitle: string) => {
     const editVal = {
       ...tasks,
-      [todolistID]: tasks[todolistID].map((el) =>
-        el.id === taskID ? { ...el, title: newTitle } : el
-      ),
+      [todolistID]: tasks[todolistID].map((el) => (el.id === taskID ? { ...el, title: newTitle } : el)),
     };
     setTasks(editVal);
   };
 
   const editTodo = (todolistID: string, newTitle: string) => {
-    setTodolists(
-      todolists.map((el) =>
-        el.id === todolistID ? { ...el, title: newTitle } : el
-      )
-    );
+    setTodolists(todolists.map((el) => (el.id === todolistID ? { ...el, title: newTitle } : el)));
   };
 
   function removeTask(todolistID: string, taskID: string) {
@@ -76,18 +70,12 @@ function App() {
   function changeStatus(todolistID: string, taskId: string, isDone: boolean) {
     setTasks({
       ...tasks,
-      [todolistID]: tasks[todolistID].map((el) =>
-        el.id === taskId ? { ...el, isDone } : el
-      ),
+      [todolistID]: tasks[todolistID].map((el) => (el.id === taskId ? { ...el, isDone } : el)),
     });
   }
 
   function changeFilter(todolistID: string, value: FilterValuesType) {
-    setTodolists(
-      todolists.map((el) =>
-        el.id === todolistID ? { ...el, filter: value } : el
-      )
-    );
+    setTodolists(todolists.map((el) => (el.id === todolistID ? { ...el, filter: value } : el)));
   }
 
   const removeTodolist = (todolistID: string) => {
@@ -106,7 +94,7 @@ function App() {
     setTasks({ ...tasks, [newTodoID]: [] });
   };
 
-  return ( 
+  return (
     <div className="App">
       <ButtonAppBar />
       <Container fixed>

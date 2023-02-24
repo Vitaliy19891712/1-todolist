@@ -2,11 +2,11 @@ import Button from "@mui/material/Button";
 import React, { ChangeEvent, useState } from "react";
 import TextField from "@mui/material/TextField";
 
-type PropsType = {
+type SuperInputPropsType = {
   callback: (title: string) => void;
 };
 
-export const SuperInput = (props: PropsType) => {
+export const SuperInput = (props: SuperInputPropsType) => {
   const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -56,12 +56,7 @@ export const SuperInput = (props: PropsType) => {
         onKeyDown={onKeyPressHandler}
         className={error ? "error" : ""}
       /> */}
-      <Button
-        variant="contained"
-        onClick={addTask}
-        size="small"
-        style={buttonStyle}
-      >
+      <Button variant="contained" onClick={addTask} size="small" style={buttonStyle}>
         +
       </Button>
       {/* {error && <div className="error-message">{error}</div>} */}
