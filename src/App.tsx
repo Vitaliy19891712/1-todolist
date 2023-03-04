@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Todolist } from "./Todolist";
+import { TaskType, Todolist } from "./Todolist";
 import { v1 } from "uuid";
 import SuperInput from "./Components/SuperInput";
 import ButtonAppBar from "./ButtonAppBar";
@@ -15,6 +15,10 @@ export type TodolistsType = {
   id: string;
   title: string;
   filter: FilterValuesType;
+};
+
+export type TaskStateType = {
+  [Id: string]: Array<TaskType>;
 };
 
 function App() {
