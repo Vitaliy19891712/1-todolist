@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect } from "react";
-import { AddItemForm } from "./AddItemForm";
-import { EditableSpan } from "./EditableSpan";
+import { AddItemForm } from "../../../components/AddItemForm/AddItemForm";
+import { EditableSpan } from "../../../components/EditableSpan/EditableSpan";
+import { Task } from "./Task/Task";
+import { TaskStatuses, TaskType } from "../../../api/todolists-api";
+import { FilterValuesType } from "../todolists-reducer";
+import { fetchTasksTC } from "../tasks-reducer";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { Delete } from "@mui/icons-material";
-import { Task } from "./Task";
-import { TaskStatuses, TaskType } from "./api/todolists-api";
-import { FilterValuesType } from "./state/todolists-reducer";
-import { fetchTasksTC } from "./state/tasks-reducer";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../../app/store";
+import { RequestStatusType } from "../app-reducer";
 
 type PropsType = {
   id: string;
@@ -22,14 +23,18 @@ type PropsType = {
   removeTodolist: (id: string) => void;
   changeTodolistTitle: (id: string, newTitle: string) => void;
   filter: FilterValuesType;
+  entityStatus: RequestStatusType;
 };
 
 export const Todolist = React.memo(function (props: PropsType) {
-  const dispatch = useDispatch<any>();
+  console.log("Todolist called");
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchTasksTC(props.id));
-  });
+    const thunk = fetchTasksTC(props.id);
+    dispatch(thunk);
+  }, []);
 
   const addTask = useCallback(
     (title: string) => {
@@ -65,7 +70,7 @@ export const Todolist = React.memo(function (props: PropsType) {
     <div>
       <h3>
         <EditableSpan value={props.title} onChange={changeTodolistTitle} />
-        <IconButton onClick={removeTodolist}>
+        <IconButton onClick={removeTodolist} disabled={props.entityStatus === "loading"}>
           <Delete />
         </IconButton>
       </h3>
